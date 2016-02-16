@@ -9,8 +9,10 @@ x=len(data["log"]["entries"])
 
 a={}
 for i in range(0,x):
+    c = data["log"]["entries"][i]["time"]
     b=data["log"]["entries"][i]["request"]["url"]
-    a[b]=(data["log"]["entries"][i]["time"])
+    a[b]=(c)
 
-for key, value in sorted(a.iteritems(), key=lambda (k,v): (v,k)):
-    print "%s: %s" % (key, value)
+c = ((k, a[k]) for k in sorted(a, key=a.get, reverse=True))
+for i in c:
+    print(i)
