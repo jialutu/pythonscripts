@@ -9,8 +9,8 @@ from matplotlib import style
 
 style.use('ggplot')
 
-MA1=10
-MA2=30
+MA1=5
+MA2=15
 
 #print(plt.style.available)
 #print(plt.__file__)
@@ -36,6 +36,7 @@ def graph_data(stock):
     plt.ylabel('H-L')
     ax2=plt.subplot2grid((6,1),(1,0),rowspan=4,colspan=1,sharex=ax1)
     plt.ylabel('Price')
+    ax2v=ax2.twinx()
     ax3=plt.subplot2grid((6,1),(5,0),rowspan=1,colspan=1,sharex=ax1)
     plt.ylabel('MAvgs')
 #    plt.xlabel('date')
@@ -71,7 +72,7 @@ def graph_data(stock):
         new_list.append(append_line)
         x+=1
     h_l=list(map(high_minus_low,highp,lowp))
-    ax1.plot_date(date[-start:],h_l[-start:],'-')
+    ax1.plot_date(date[-start:],h_l[-start:],'-', label='H-L')
     plt.setp(ax1.get_xticklabels(), visible=False)
     ax1.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5,prune='lower'))
 
@@ -104,9 +105,14 @@ def graph_data(stock):
     ax2.annotate(str(closep[-1]), (date[-1],closep[-1]), xytext=(date[-1]+2.5,closep[-1]), bbox=bbox_props)
     plt.setp(ax2.get_xticklabels(), visible=False)
     ax2.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5,prune='upper'))
+    ax2v.fill_between(date[-start:],0,volume[-start:],facecolor='#0079a3',alpha=0.4)
+    ax2v.plot_date([],[],'-',color='#0079a3',label='volume',alpha=0.4)
+    ax2v.axes.yaxis.set_ticklabels([])
+    ax2v.grid(False)
+    ax2v.set_ylim(0,3*volume.max())
 
-    ax3.plot(date[-start:],ma1[-start:], linewidth=1)
-    ax3.plot(date[-start:],ma2[-start:], linewidth=1)
+    ax3.plot(date[-start:],ma1[-start:], linewidth=1,label=str(MA1)+'MA')
+    ax3.plot(date[-start:],ma2[-start:], linewidth=1,label=str(MA2)+'MA')
     ax3.fill_between(date[-start:], ma2[-start:],ma1[-start:],where=(ma2[-start:]>=ma1[-start:]),facecolor='r',edgecolor='r',alpha=0.5)
     ax3.fill_between(date[-start:], ma2[-start:],ma1[-start:],where=(ma2[-start:]<=ma1[-start:]),facecolor='g',edgecolor='g',alpha=0.5)
 
@@ -115,6 +121,17 @@ def graph_data(stock):
     ax3.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5,prune='upper'))
 
     plt.subplots_adjust(left=.09,bottom=.16,right=.94,top=.95,wspace=.2,hspace=.02)
+    ax1.legend()
+
+    leg=ax1.legend(loc=9,ncol=2,prop={'size':11},fancybox=True,borderaxespad=0)
+    leg.get_frame().set_alpha(0.4)
+    ax2v.legend()
+    leg=ax2v.legend(loc=9,ncol=2,prop={'size':11},fancybox=True,borderaxespad=0)
+    leg.get_frame().set_alpha(0.4)
+    ax3.legend()
+    leg=ax3.legend(loc=9,ncol=2,prop={'size':11},fancybox=True,borderaxespad=0)
+    leg.get_frame().set_alpha(0.4)
+
     plt.show()
 
 stock = input('Stock to plot: ')
