@@ -2,11 +2,11 @@ import os
 import fnmatch
 import re
 
-a = "C:/Users/jtu/Documents/pb-nagios/files/pb_objects/services/UAT/centurylink"
+a = "C:/Users/jtu/Documents/pb-nagios/files/pb_objects/services/PRD/centurylink"
 
 def NagiosUpdate(a):
     folders = os.listdir(a)
-
+    i = 0
     for folder in folders:
         b = a+'/'+folder
         files = os.listdir(b)
@@ -23,5 +23,7 @@ def NagiosUpdate(a):
                 f = open(c,'w')
                 f.write(newdata)
                 f.close()
+                i+=1
+    print(i,'files have been updated')
 
 NagiosUpdate(a)
